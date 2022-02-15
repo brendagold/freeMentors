@@ -9,8 +9,8 @@ routes.get('/', (req, res) => {
   });
 
 routes.get('/api/users', UserController.allUsers);
-routes.post('/user/register', UserController.createUser);
+routes.post('/auth/signup', UserController.createUser);
 
-routes.post('/user/login', LoginController.login);
+routes.post('/auth/login', LoginController.login);
 
 export default routes;

@@ -12,7 +12,7 @@ export default {
            //Password Check
            const validPassword = await bcrypt.compare(password, users.rows[0].password);
            if(!validPassword) return res.status(401).json({error: "Incorrect Email or Password"})
-           return res.status(200).json("You have successfully signed in")
+           return res.status(200).json({message: "User is successfully logged in"})
 
         } catch (error) {
             res.status(500).json({error:error.message})
