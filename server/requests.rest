@@ -1,0 +1,16 @@
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+    "email": "richie@yahoo.com",
+	"password":"richie2022"
+}
+
+###
+GET http://localhost:8000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJjZWExY2UyMy1lMzFhLTQ0YmEtYTM4My05NzNiYTY0ZTQ5YTQiLCJlbWFpbCI6InJpY2hpZUB5YWhvby5jb20iLCJpYXQiOjE2NDUwMTg1MzMsImV4cCI6MTY0NTAxODY1M30.qut0zPmo9YTX6Ryk9EF6FMUTxkVrmb2i9B9zcDNiSWg
+
+
+
+###
+GET http://localhost:8000/refresh_token

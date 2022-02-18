@@ -1,5 +1,6 @@
 import pool from '../db.js';
 import bcrypt from 'bcrypt';
+import {jwtTokens} from '../utils/jwt-helpers.js'
 
 
 export default {
@@ -19,11 +20,11 @@ export default {
 
 
         } catch (error) {
-            res.status(500).json({error:error.message})
+            res.status(401).json({error:error.message})
         }
     },
 
-    
+   
 
     
 }

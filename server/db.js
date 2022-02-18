@@ -2,12 +2,14 @@ import pg from "pg";
 
 const { Pool } = pg;
 
+
+
 let localPoolConfig = {
   user: "postgres",
   password: "Brenda@919",
   host: "localhost",
   port: "5432",
-  database: "freementors",
+  database: "postgres",
 };
 
 const poolConfig = process.env.DATABASE_URL
@@ -17,7 +19,7 @@ const poolConfig = process.env.DATABASE_URL
     }
   : localPoolConfig;
 
-
-const pool = new Pool(poolConfig)
+let pool = new Pool(poolConfig)
+ 
 
 export default pool;
