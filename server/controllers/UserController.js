@@ -1,7 +1,7 @@
 import pool from "../db.js";
 import bcrypt from "bcrypt";
 import { jwtTokens } from "../utils/jwt-helpers.js";
-import { schema } from "../utils/joiSchemas.js";
+import { RegisterValidation } from "../utils/joiSchemas.js";
 import Joi from "joi";
 import { success, error } from "../utils/responseFormat.js";
 
@@ -27,14 +27,12 @@ export default {
 
   async createUser(req, res) {
     try {
-      //   schema.validate(req.body, (err, result) => {
-      //     if (err) {
-      //       res.send("An error occurred");
-      //     }
-      //     console.log(result);
-      //     res.send("successful integration");
-      //   });
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const {error, value} = RegisterValidation(req.body);
+        
+          if (error) {
+            return res.status(400).send(error.details[0].message);
+          } else {
+      const hashedPassword = await bcrypt.hash(value.password, 10);
       const {
         firstname,
         lastname,
@@ -43,7 +41,7 @@ export default {
         bio,
         occupation,
         expertise,
-      } = req.body;
+      } = value;
       const newUser = await pool.query(
         "INSERT INTO users ( firstName, lastName, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
         [
@@ -69,6 +67,7 @@ export default {
             res.statusCode
           )
         );
+          }
     } catch (e) {
       res.status(500).json(error(e.message, res.status ));
     }
