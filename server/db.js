@@ -7,9 +7,9 @@ const { Pool } = pg;
 let localPoolConfig = {
   user: "postgres",
   password: "Brenda@919",
-  host: "localhost",
-  port: "5432",
-  database: "postgres",
+  host: process.env.DATABASE_HOST,
+  port: process.env.DATABASE_PORT,
+  database: process.env.DATABASE,
 };
 
 const poolConfig = process.env.DATABASE_URL

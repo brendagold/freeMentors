@@ -1,5 +1,7 @@
 import pool from "../db.js";
 import bcrypt from "bcrypt";
+import { success, error } from "../utils/responseFormat.js";
+
 
 export default {
   async allSessions(req, res) {
@@ -13,12 +15,21 @@ export default {
 
   async createSession(req, res) {
     try {
-      const newUser = await pool.query(
+      const {mentorid, questions} = req.body;
+      const {userid, email} = req.user
+      const mentor = await pool.query("Select * From mentors WHERE mentorid = $1", [
+        mentorid,
+      ]);
+      
+      if(!mentor.rows[0]) {
+        res.status(401).json(error("mentor not found", res.status))
+      }
+      const newSession = await pool.query(
         "INSERT INTO sessions ( mentorid, questions, menteeid, menteeEmail) VALUES ($1, $2,$3,$4) RETURNING *",
-        [req.body.mentorid, req.body.questions, req.user.userid, req.user.email]
+        [mentorid, questions, userid, email]
       );
 
-      res.json({ sessions: newUser.rows[0] });
+      res.status(200).json(success("Session created successfully", newSession.rows[0], res.status));
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -31,8 +42,11 @@ export default {
         "UPDATE sessions SET status = $1 WHERE sessionid = $2 RETURNING *",
         [update, sessionid]
       );
+      if(!response.rows[0]) {
+        res.status(401).json(error("Session Id not found", res.status))
+      }
 
-      res.json({ data: response.rows[0]})
+      res.status(200).json(success("Request Accepted", response.rows[0], res.status))
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -45,8 +59,11 @@ export default {
           "UPDATE sessions SET status = $1 WHERE sessionid = $2 RETURNING *",
           [update, sessionid]
         );
+        if(!response.rows[0]) {
+          res.status(401).json(error("Session Id not found", res.status))
+        }
   
-        res.json({ data: response.rows[0]})
+        res.status(200).json(success("Request Rejected", response.rows[0], res.status))
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
