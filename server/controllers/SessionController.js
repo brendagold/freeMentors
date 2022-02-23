@@ -7,7 +7,7 @@ export default {
   async allSessions(req, res) {
     try {
       const sessions = await pool.query("SELECT * FROM sessions");
-      res.json({ sessions: sessions.rows });
+      res.status(200).json(success("",sessions.rows, res.status ));
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
