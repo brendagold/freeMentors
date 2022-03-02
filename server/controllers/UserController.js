@@ -144,19 +144,5 @@ export default {
     }
   },
 
-  async viewSessions (req, res) {
-    try {
-      const id = req.user.userid;
-      const sessions = await pool.query(
-        "Select * FROM sessions WHERE menteeid = $1",
-        [id]
-      );
-      if (sessions.rows == null) {
-        res.status(404).json(error("No availabe sessions", res.status));
-      }
-      res.status(200).json(success("", sessions.rows , res.status));
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
+  
 };

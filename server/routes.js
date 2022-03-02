@@ -15,8 +15,7 @@ routes.get('/', (req, res) => {
 
 routes.get('/api/users',  UserController.allUsers);
 routes.post('/auth/signup', UserController.createUser);
-routes.get('/users/:userid', UserController.getUserById )
-routes.get('/api/users/sessions', authenticateToken, UserController.viewSessions);
+routes.get('/users/:userid', UserController.getUserById );
 routes.patch('/users/:userid', authenticateToken, isAdmin, UserController.upgradeUserById )
 
 routes.post('/auth/signin', LoginController.login);
@@ -25,13 +24,14 @@ routes.get('/mentors', authenticateToken, MentorController.allMentors)
 routes.get('/mentors/:mentorid', authenticateToken, MentorController.getMentorById)
 
 
-routes.get('/sessions', SessionController.allSessions)
+routes.get('/api/sessions', SessionController.allSessions)
 routes.patch('/sessions/:sessionid/accept', authenticateToken, isMentor, SessionController.acceptSession)
 routes.patch('/sessions/:sessionid/reject', authenticateToken, isMentor, SessionController.rejectSession)
 routes.post('/sessions', authenticateToken, SessionController.createSession)
+routes.get('/sessions', authenticateToken, SessionController.viewSessions);
 
-routes.patch('/admin/auth/:id', AdminController.createAdmin)
-routes.get('/api/admins',  AdminController.allAdmins);
+routes.patch('/admin/auth/:id', isAdmin, AdminController.createAdmin)
+routes.get('/api/admins', isAdmin, AdminController.allAdmins);
 
 
 
