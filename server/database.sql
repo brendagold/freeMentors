@@ -3,37 +3,31 @@ CREATE EXTENSION IF NOT EXISTS 'uuid-ossp';
 CREATE DATABASE freementors;
 
 CREATE TABLE users (
-    userId uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    firstName TEXT NOT NULL,
-    lastName TEXT NOT NULL,
+    userid uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     address TEXT NOT NULL,
     bio TEXT NOT NULL,
     occupation TEXT NOT NULL,
-    expertise TEXT NOT NULL
+    expertise TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'user'
 );
 
 CREATE TABLE mentors (
     mentorId uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    firstName TEXT NOT NULL,
-    lastName TEXT NOT NULL,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     address TEXT NOT NULL,
     bio TEXT NOT NULL,
     occupation TEXT NOT NULL,
-    expertise TEXT NOT NULL
+    expertise TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'mentor'
 );
 
-CREATE TABLE sessions (
-    sessionId uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    questions TEXT NOT NULL,
-    menteeEmail TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'Pending...',
-    mentorId uuid NOT NULL,
-    menteeId uuid NOT NULL
-);
 
 SELECT
     *

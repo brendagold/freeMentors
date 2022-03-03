@@ -7,7 +7,7 @@ import { success, error } from "../utils/responseFormat.js";
 export default {
     async allMentors(req,res) {
         try {
-           const mentors = await pool.query('SELECT mentorid, firstName, lastName, email,address,bio,occupation,expertise FROM mentors');
+           const mentors = await pool.query('SELECT mentorid, firstName, lastName, email,address,bio,occupation,expertise, role FROM mentors');
            res.status(200).json(success("All Mentors", mentors.rows, res.status))
 
         } catch (error) {

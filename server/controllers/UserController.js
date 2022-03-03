@@ -2,21 +2,20 @@ import pool from "../db.js";
 import bcrypt from "bcrypt";
 import { jwtTokens } from "../utils/jwt-helpers.js";
 import { RegisterValidation } from "../utils/joiSchemas.js";
-import Joi from "joi";
 import { success, error } from "../utils/responseFormat.js";
 
 export default {
   async allUsers(req, res) {
     try {
       const users = await pool.query(
-        "SELECT userid, firstName, lastName, email,address,bio,occupation,expertise FROM users"
+        "SELECT userid, firstName, lastName, email,address,bio,occupation,expertise, role FROM users"
       );
       res
         .status(200)
         .json(
           success(
-            "User Created Successfully",
-            { users: users.rows },
+            "",
+            users.rows,
             res.statusCode
           )
         );
@@ -43,7 +42,7 @@ export default {
         expertise,
       } = value;
       const newUser = await pool.query(
-        "INSERT INTO users ( firstName, lastName, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
+        "INSERT INTO users ( firstname, lastname, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
         [
           firstname,
           lastname,
@@ -56,6 +55,8 @@ export default {
         ]
       );
 
+      console.log(newUser.rows[0])
+
       let tokens = jwtTokens(newUser.rows[0]);
       res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
       res
@@ -63,7 +64,7 @@ export default {
         .json(
           success(
             "User Created Successfully",
-            { tokens: tokens },
+            tokens,
             res.statusCode
           )
         );
@@ -77,7 +78,7 @@ export default {
     try {
       const id = req.params.userid;
       const user = await pool.query(
-        "Select userid, firstName, lastName, email,address,bio,occupation,expertise From users WHERE userid = $1",
+        "Select userid, firstname, lastname, email,address,bio,occupation,expertise From users WHERE userid = $1",
         [id]
       );
       if (user.rows[0] == null) {
@@ -110,9 +111,9 @@ export default {
         occupation,
         expertise,
       } = currentUser;
-      
+      const newRole = "mentor"
       const newMentor = await pool.query(
-        "INSERT INTO mentors ( firstname, lastname, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
+        "INSERT INTO mentors ( firstname, lastname, email,password,address,bio,occupation,expertise,role) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9) RETURNING *",
         [
           firstname,
           lastname,
@@ -122,6 +123,7 @@ export default {
           bio,
           occupation,
           expertise,
+          newRole
         ]
       );
 
@@ -141,4 +143,6 @@ export default {
       res.status(500).json({ error: error.message });
     }
   },
+
+  
 };
