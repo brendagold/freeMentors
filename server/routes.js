@@ -2,7 +2,7 @@ import express  from 'express';
 import UserController from './controllers/UserController.js'
 import LoginController from './controllers/LoginController.js'
 import { authenticateToken } from './middleware/authorization.js';
-import {isAdmin, isMentor} from './middleware/roleAuth.js';
+import {isAdmin, isMentor, isUser} from './middleware/roleAuth.js';
 import MentorController from './controllers/MentorController.js';
 import SessionController from './controllers/SessionController.js';
 import AdminController from './controllers/AdminController.js';
@@ -27,6 +27,8 @@ routes.get('/mentors/:mentorid', authenticateToken, MentorController.getMentorBy
 routes.get('/api/sessions', SessionController.allSessions)
 routes.patch('/sessions/:sessionid/accept', authenticateToken, isMentor, SessionController.acceptSession)
 routes.patch('/sessions/:sessionid/reject', authenticateToken, isMentor, SessionController.rejectSession)
+routes.patch('/sessions/:sessionid/review', authenticateToken, isUser, SessionController.reviewSession)
+routes.patch('/sessions/:sessionid/review', authenticateToken, SessionController.deleteReview)
 routes.post('/sessions', authenticateToken, SessionController.createSession)
 routes.get('/sessions', authenticateToken, SessionController.viewSessions);
 

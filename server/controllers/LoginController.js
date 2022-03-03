@@ -16,8 +16,7 @@ export default {
         "SELECT * FROM mentors Where email = $1",
         [email]
       );
-      console.log(user.rows[0]);
-      console.log(mentor.rows[0]);
+     
       if (user.rows.length === 0 && mentor.rows.length === 0)
         return res.status(401).json(error("Incorrect Email ", res.status));
       

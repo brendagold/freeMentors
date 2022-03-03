@@ -55,7 +55,7 @@ export default {
         ]
       );
 
-      console.log(newUser.rows[0])
+    
 
       let tokens = jwtTokens(newUser.rows[0]);
       res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });

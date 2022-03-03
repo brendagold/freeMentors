@@ -28,6 +28,17 @@ CREATE TABLE mentors (
     role TEXT NOT NULL DEFAULT 'mentor'
 );
 
+CREATE TABLE sessions (
+    sessionId uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    questions TEXT NOT NULL,
+    menteeEmail TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'Pending...',
+    score INTEGER NOT NULL DEFAULT 0,
+    remarks TEXT NOT NULL DEFAULT ' ',
+    mentorId uuid NOT NULL,
+    menteeId uuid NOT NULL,
+    menteeFullName TEXT NOT NULL 
+);
 
 SELECT
     *
