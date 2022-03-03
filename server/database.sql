@@ -14,6 +14,27 @@ CREATE TABLE users (
     expertise TEXT NOT NULL
 );
 
+CREATE TABLE mentors (
+    mentorId uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    address TEXT NOT NULL,
+    bio TEXT NOT NULL,
+    occupation TEXT NOT NULL,
+    expertise TEXT NOT NULL
+);
+
+CREATE TABLE sessions (
+    sessionId uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    questions TEXT NOT NULL,
+    menteeEmail TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'Pending...',
+    mentorId uuid NOT NULL,
+    menteeId uuid NOT NULL
+);
+
 SELECT
     *
 FROM
@@ -66,7 +87,7 @@ VALUES
     );
 
 INSERT INTO
-    users (
+    mentors (
         firstName,
         lastName,
         email,
@@ -87,3 +108,21 @@ VALUES
         'crypto Expert',
         'Intermediate'
     );
+
+INSERT INTO sessions (
+    questions,
+    menteeEmail
+) VALUES (
+    'How to become a crypto expert',
+    'bgold@gmail.com'
+);
+
+INSERT INTO sessions (
+    questions,
+    menteeEmail,
+    status
+) VALUES (
+    'How to be a very good web developer?',
+    'bgold@gmail.com',
+    'accepted'
+);
