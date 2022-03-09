@@ -78,7 +78,7 @@ export default {
     try {
       const id = req.params.userid;
       const user = await pool.query(
-        "Select userid, firstname, lastname, email,address,bio,occupation,expertise From users WHERE userid = $1",
+        "Select userid, firstname, lastname, email,address,bio,occupation,expertise,role From users WHERE userid = $1",
         [id]
       );
       if (user.rows[0] == null) {

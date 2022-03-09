@@ -18,7 +18,7 @@ export default {
       );
      
       if (user.rows.length === 0 && mentor.rows.length === 0)
-        return res.status(401).json(error("Incorrect Email ", res.status));
+        return res.status(401).json(error("Incorrect Email or Password", res.status));
       
 
       // Password Check
@@ -27,7 +27,7 @@ export default {
       } else if (mentor.rows.length === 0) {
         await bcrypt.compare(password, user.rows[0].password);
       } else {
-        return res.status(401).json({ error: "Incorrect Password" });
+        return res.status(401).json({ error: "Incorrect Email or Password" });
       }
 
       let tokens = jwtTokens(user.rows[0] || mentor.rows[0]);
