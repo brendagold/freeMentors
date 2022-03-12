@@ -32,8 +32,8 @@ routes.patch('/sessions/:sessionid/review', authenticateToken, SessionController
 routes.post('/sessions', authenticateToken, SessionController.createSession)
 routes.get('/sessions', authenticateToken, SessionController.viewSessions);
 
-routes.patch('/admin/auth/:id', isAdmin, AdminController.createAdmin)
-routes.get('/api/admins', isAdmin, AdminController.allAdmins);
+routes.patch('/admin/auth/:id',  AdminController.createAdmin)
+routes.get('/api/admins', authenticateToken, isAdmin, AdminController.allAdmins);
 
 
 

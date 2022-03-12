@@ -32,10 +32,10 @@ export default {
             return res.status(400).send(error.details[0].message);
           } else {
       const hashedPassword = await bcrypt.hash(value.password, 10);
+      const lowerCaseEmail = value.email.toLowerCase()
       const {
         firstname,
         lastname,
-        email,
         address,
         bio,
         occupation,
@@ -46,7 +46,7 @@ export default {
         [
           firstname,
           lastname,
-          email,
+          lowerCaseEmail,
           hashedPassword,
           address,
           bio,
@@ -110,6 +110,7 @@ export default {
         bio,
         occupation,
         expertise,
+        
       } = currentUser;
       const newRole = "mentor"
       const newMentor = await pool.query(
@@ -134,7 +135,7 @@ export default {
         .json(
           success(
             "User account changed to mentor",
-            { mentor: newMentor.rows },
+            newMentor.rows,
             res.statusCode
           )
         );
