@@ -17,10 +17,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(cors());
 app.use(express.json());
 
-console.log(process.env.DATABASE_PASSWORD)
-console.log(process.env.DATABASE_PORT)
-//console.log(process.env)
-console.log(process.env.ACCESS_TOKEN_SECRET)
 
 
 app.use('/files', express.static(join(__dirname, '..', 'files')));
@@ -29,3 +25,5 @@ app.use(routes);
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
+
+export default app

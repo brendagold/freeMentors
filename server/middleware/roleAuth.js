@@ -1,5 +1,5 @@
 function isAdmin(req, res, next) {
-    console.log(req.user)
+ 
   if (req.user.role == "admin") {
     next();
   } else {
@@ -8,12 +8,19 @@ function isAdmin(req, res, next) {
 }
 
 function isMentor(req, res, next) {
-  console.log(req.user)
+
 if (req.user.role == "mentor") {
   next();
 } else {
   res.status(403).send("Must be a mentor");
 }
 }
-
-export { isAdmin, isMentor };
+function isUser(req, res, next) {
+  
+if (req.user.role == "user") {
+  next();
+} else {
+  res.status(403).send("Must be a user");
+}
+}
+export { isAdmin, isMentor, isUser };

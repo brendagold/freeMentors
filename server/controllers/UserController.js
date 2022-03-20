@@ -32,10 +32,10 @@ export default {
             return res.status(400).send(error.details[0].message);
           } else {
       const hashedPassword = await bcrypt.hash(value.password, 10);
+      const lowerCaseEmail = value.email.toLowerCase()
       const {
         firstname,
         lastname,
-        email,
         address,
         bio,
         occupation,
@@ -46,7 +46,7 @@ export default {
         [
           firstname,
           lastname,
-          email,
+          lowerCaseEmail,
           hashedPassword,
           address,
           bio,
@@ -55,7 +55,7 @@ export default {
         ]
       );
 
-      console.log(newUser.rows[0])
+    
 
       let tokens = jwtTokens(newUser.rows[0]);
       res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
@@ -78,7 +78,7 @@ export default {
     try {
       const id = req.params.userid;
       const user = await pool.query(
-        "Select userid, firstname, lastname, email,address,bio,occupation,expertise From users WHERE userid = $1",
+        "Select userid, firstname, lastname, email,address,bio,occupation,expertise,role From users WHERE userid = $1",
         [id]
       );
       if (user.rows[0] == null) {
@@ -110,6 +110,7 @@ export default {
         bio,
         occupation,
         expertise,
+        
       } = currentUser;
       const newRole = "mentor"
       const newMentor = await pool.query(
@@ -134,7 +135,7 @@ export default {
         .json(
           success(
             "User account changed to mentor",
-            { mentor: newMentor.rows },
+            newMentor.rows,
             res.statusCode
           )
         );
