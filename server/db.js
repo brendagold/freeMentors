@@ -24,7 +24,7 @@ let poolConfig;
 if (process.env.DATABASE_URL) {
   poolConfig = {
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectiUnauthorized: false },
+    ssl: { rejectUnauthorized: false },
   };
 } else if (process.env.NODE_ENV == "test") {
   poolConfig = testPoolConfig;
