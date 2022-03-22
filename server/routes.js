@@ -10,7 +10,7 @@ import AdminController from './controllers/AdminController.js';
 const routes = express.Router();
 
 routes.get('/', (req, res) => {
-    res.send('Hello from Express');
+    res.send('Hello from Free Mentors API');
   });
 
 routes.get('/api/users',  UserController.allUsers);
