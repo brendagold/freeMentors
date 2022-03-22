@@ -28,7 +28,7 @@ routes.get('/api/sessions', SessionController.allSessions)
 routes.patch('/sessions/:sessionid/accept', authenticateToken, isMentor, SessionController.acceptSession)
 routes.patch('/sessions/:sessionid/reject', authenticateToken, isMentor, SessionController.rejectSession)
 routes.patch('/sessions/:sessionid/review', authenticateToken, isUser, SessionController.reviewSession)
-routes.patch('/sessions/:sessionid/review', authenticateToken, isAdmin, SessionController.deleteReview)
+routes.delete('/sessions/:sessionid/review', authenticateToken, isAdmin, SessionController.deleteReview)
 routes.post('/sessions', authenticateToken, SessionController.createSession)
 routes.get('/sessions', authenticateToken, SessionController.viewSessions);
 
