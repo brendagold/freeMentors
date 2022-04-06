@@ -6,9 +6,9 @@ export default {
   async allSessions(req, res) {
     try {
       const sessions = await pool.query("SELECT * FROM sessions");
-      res.status(200).json(success("", sessions.rows, res.status));
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(200).json(success("", sessions.rows, res.statusCode));
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode));
     }
   },
 
@@ -22,7 +22,7 @@ export default {
       );
 
       if (!mentor.rows[0]) {
-        res.status(401).json(error("mentor not found", res.status));
+        res.status(401).json(error("mentor not found", res.statusCode));
       }
       const newSession = await pool.query(
         "INSERT INTO sessions ( mentorid, questions, menteeid, menteeEmail, menteeFullName) VALUES ($1, $2,$3,$4, $5) RETURNING *",
@@ -30,16 +30,16 @@ export default {
       );
 
       res
-        .status(200)
+        .status(201)
         .json(
           success(
             "Session created successfully",
             newSession.rows[0],
-            res.status
+            res.statusCode
           )
         );
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
   async acceptSession(req, res) {
@@ -51,14 +51,14 @@ export default {
         [update, sessionid]
       );
       if (!response.rows[0]) {
-        res.status(401).json(error("Session Id not found", res.status));
+        res.status(401).json(error("Session Id not found", res.statusCode));
       }
 
       res
         .status(200)
-        .json(success("Request Accepted", response.rows[0], res.status));
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+        .json(success("Request Accepted", response.rows[0], res.statusCode));
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
   async rejectSession(req, res) {
@@ -70,14 +70,14 @@ export default {
         [update, sessionid]
       );
       if (!response.rows[0]) {
-        res.status(401).json(error("Session Id not found", res.status));
+        res.status(401).json(error("Session Id not found", res.statusCode));
       }
 
       res
         .status(200)
-        .json(success("Request Rejected", response.rows[0], res.status));
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+        .json(success("Request Rejected", response.rows[0], res.statusCode));
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
   async viewSessions(req, res) {
@@ -97,11 +97,11 @@ export default {
       }
 
       if (sessions.rows == null) {
-        res.status(404).json(error("No availabe sessions", res.status));
+        res.status(404).json(error("No availabe sessions", res.statusCode));
       }
-      res.status(200).json(success("", sessions.rows, res.status));
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(200).json(success("", sessions.rows, res.statusCode));
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
 
@@ -119,27 +119,27 @@ export default {
         [userid]
       );
 
-      console.log(mentee.rows[0]);
+    
 
       if (!mentee.rows[0]) {
-        res.status(401).json(error("You have no session created", res.status));
+        res.status(401).json(error("You have no session created", res.statusCode));
       } else {
         const response = await pool.query(
           "UPDATE sessions SET remarks = $1, score = $2  WHERE sessionid = $3 RETURNING *",
           [remarks, score, sessionid]
         );
         if (!response.rows[0]) {
-          res.status(401).json(error("Session Not found", res.status));
+          res.status(401).json(error("Session Not found", res.statusCode));
         }
 
         res
           .status(200)
           .json(
-            success("Session Review Successful", response.rows[0], res.status)
+            success("Session Review Successful", response.rows[0], res.statusCode)
           );
       }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
   async deleteReview(req, res) {
@@ -154,10 +154,10 @@ export default {
       res
         .status(200)
         .json(
-          success("Review successfully deleted", response.rows[0], res.status)
+          success("Review successfully deleted", response.rows[0], res.statusCode)
         );
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
 };

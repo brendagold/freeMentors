@@ -1,28 +1,23 @@
 //  Send any success response
 
-const success = (message, data, statusCode) => {
+const success = (message, data, status) => {
   return {
-    status: statusCode,
+    
+    status,
     message,
     data,
+    success: true,
   };
 };
 
 // Send any error response
 
-const error = (message, statusCode) => {
-  // List of common HTTP request code
-  const codes = [200, 201, 400, 401, 404, 403, 422, 500];
-
-  // Get matched code
-  const findCode = codes.find((code) => code == statusCode);
-
-  if (!findCode) statusCode = 500;
-  else statusCode = findCode;
+const error = (message, status) => {
 
   return {
     message,
-    status: statusCode,
+    status: status,
+    success: false,
   };
 };
 

@@ -11,14 +11,14 @@ export default {
         [update, id]
       );
       if (!response.rows[0]) {
-        res.status(401).json(error("User Id not found", res.status));
+        res.status(401).json(error("User Id not found", res.statusCode));
       }
 
       res
         .status(200)
-        .json(success("Admin Created", response.rows[0], res.status));
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+        .json(success("Admin Created", response.rows[0], res.statusCode));
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode));
     }
   },
 
@@ -38,8 +38,8 @@ export default {
           res.statusCode
         )
       );
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   }
 };

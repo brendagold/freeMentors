@@ -32,7 +32,7 @@ routes.delete('/sessions/:sessionid/review', authenticateToken, isAdmin, Session
 routes.post('/sessions', authenticateToken, SessionController.createSession)
 routes.get('/sessions', authenticateToken, SessionController.viewSessions);
 
-routes.patch('/admin/auth/:id',  AdminController.createAdmin)
+routes.patch('/admin/auth/:id', isAdmin, AdminController.createAdmin)
 routes.get('/api/admins', authenticateToken, isAdmin, AdminController.allAdmins);
 
 
