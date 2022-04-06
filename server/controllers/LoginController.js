@@ -8,7 +8,7 @@ export default {
     try {
       const { email, password } = req.body;
       //   let mentor;
-      //   let validMentorPassword;
+      let validPassword;
       const user = await pool.query("SELECT * FROM users Where email = $1", [
         email,
       ]);
@@ -17,19 +17,19 @@ export default {
         [email]
       );
      
-      if (user.rows.length === 0 && mentor.rows.length === 0)
-        return res.status(401).json(error("Incorrect Email or Password", res.status));
-      
-
-      // Password Check
+      if (user.rows.length === 0 && mentor.rows.length === 0) {
+        return res.status(401).json(error("Incorrect Email or Password", res.statusCode));
+      }  
       if (user.rows.length === 0) {
-        await bcrypt.compare(password, mentor.rows[0].password);
+        validPassword = await bcrypt.compare(password, mentor.rows[0].password);
       } else if (mentor.rows.length === 0) {
-        await bcrypt.compare(password, user.rows[0].password);
-      } else {
-        return res.status(401).json({ error: "Incorrect Email or Password" });
+        validPassword = await bcrypt.compare(password, user.rows[0].password);
+      } 
+      if(!validPassword) {
+        return res.status(401).json(error("Incorrect Email or Password", res.statusCode ));
       }
 
+      
       let tokens = jwtTokens(user.rows[0] || mentor.rows[0]);
       res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
       res.json(

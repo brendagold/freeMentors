@@ -19,17 +19,17 @@ export default {
             res.statusCode
           )
         );
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
 
   async createUser(req, res) {
     try {
-        const {error, value} = RegisterValidation(req.body);
+        const {error:err, value} = RegisterValidation(req.body);
         
-          if (error) {
-            return res.status(400).send(error.details[0].message);
+          if (err) {
+            return res.status(400).json(error(err.details[0].message, 400 ));
           } else {
       const hashedPassword = await bcrypt.hash(value.password, 10);
       const lowerCaseEmail = value.email.toLowerCase()
@@ -60,7 +60,7 @@ export default {
       let tokens = jwtTokens(newUser.rows[0]);
       res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
       res
-        .status(200)
+        .status(201)
         .json(
           success(
             "User Created Successfully",
@@ -70,7 +70,7 @@ export default {
         );
           }
     } catch (e) {
-      res.status(500).json(error(e.message, res.status ));
+      res.status(500).json(error(e.message, 500 ));
     }
   },
 
@@ -82,11 +82,11 @@ export default {
         [id]
       );
       if (user.rows[0] == null) {
-        res.status(404).json(error("user not found", res.status));
+        res.status(404).json(error("user not found", res.statusCode));
       }
-      res.status(200).json(success("", user.rows[0] , res.status));
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(200).json(success("", user.rows[0] , res.statusCode));
+    } catch (err) {
+      res.status(500).json(error( err.message , res.statusCode));
     }
   },
 
@@ -97,7 +97,7 @@ export default {
         id,
       ]);
       if (!user.rows[0]) {
-        res.status(404).json(error("user does not exist", res.status));
+        res.status(404).json(error("user does not exist", res.statusCode));
       } else {
       const currentUser = user.rows[0];
 
@@ -140,8 +140,8 @@ export default {
           )
         );
           }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+    } catch (err) {
+      res.status(500).json(error(err.message, res.statusCode ));
     }
   },
 
