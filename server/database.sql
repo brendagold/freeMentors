@@ -4,6 +4,7 @@ CREATE DATABASE freementors;
 
 CREATE TABLE users (
     userid uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profile_img TEXT NOT NULL,
     firstname TEXT NOT NULL,
     lastname TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
@@ -47,6 +48,7 @@ FROM
 
 INSERT INTO
     users (
+        profile_img,
         firstName,
         lastName,
         email,
@@ -58,6 +60,7 @@ INSERT INTO
     )
 VALUES
 (
+    'http://res.cloudinary.com/dtn9c7vkv/image/upload/v1650999225/bismid.PNG.png',
         'Brenda',
         'Peters',
         'brenda@yahoo.com',

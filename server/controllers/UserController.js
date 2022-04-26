@@ -9,7 +9,7 @@ export default {
   async allUsers(req, res) {
     try {
       const users = await pool.query(
-        "SELECT userid, firstName, lastName, email,address,bio,occupation,expertise, role FROM users"
+        "SELECT userid,profile_img, firstName, lastName, email,address,bio,occupation,expertise, role FROM users"
       );
       res
         .status(200)
@@ -42,6 +42,9 @@ export default {
         height: 500,
         crop: 'limit',
       });
+
+      const profileImage = imageResult.url
+   
       const lowerCaseEmail = value.email.toLowerCase()
       const {
         firstname,
@@ -53,33 +56,34 @@ export default {
       } = value;
      
      
-      // const newUser = await pool.query(
-      //   "INSERT INTO users ( firstname, lastname, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
-      //   [
-      //     firstname,
-      //     lastname,
-      //     lowerCaseEmail,
-      //     hashedPassword,
-      //     address,
-      //     bio,
-      //     occupation,
-      //     expertise,
-      //   ]
-      // );
+      const newUser = await pool.query(
+        "INSERT INTO users (profile_img, firstname, lastname, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8, $9) RETURNING *",
+        [
+          profileImage,
+          firstname,
+          lastname,
+          lowerCaseEmail,
+          hashedPassword,
+          address,
+          bio,
+          occupation,
+          expertise,
+        ]
+      );
 
     
 
-      // let tokens = jwtTokens(newUser.rows[0]);
-      // res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
-      // res
-      //   .status(201)
-      //   .json(
-      //     success(
-      //       "User Created Successfully",
-      //       tokens,
-      //       res.statusCode
-      //     )
-      //   );
+      let tokens = jwtTokens(newUser.rows[0]);
+      res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
+      res
+        .status(201)
+        .json(
+          success(
+            "User Created Successfully",
+            tokens,
+            res.statusCode
+          )
+        );
           }
     } catch (e) {
       res.status(500).json(error(e.message, 500 ));
@@ -90,7 +94,7 @@ export default {
     try {
       const id = req.params.userid;
       const user = await pool.query(
-        "Select userid, firstname, lastname, email,address,bio,occupation,expertise,role From users WHERE userid = $1",
+        "Select userid, profile_img, firstname, lastname, email,address,bio,occupation,expertise,role From users WHERE userid = $1",
         [id]
       );
       if (user.rows[0] == null) {
@@ -114,6 +118,7 @@ export default {
       const currentUser = user.rows[0];
 
       const {
+        profileImage,
         firstname,
         lastname,
         email,
@@ -126,8 +131,9 @@ export default {
       } = currentUser;
       const newRole = "mentor"
       const newMentor = await pool.query(
-        "INSERT INTO mentors ( firstname, lastname, email,password,address,bio,occupation,expertise,role) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9) RETURNING *",
+        "INSERT INTO mentors ( profile_img, firstname, lastname, email,password,address,bio,occupation,expertise,role) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *",
         [
+          profileImage,
           firstname,
           lastname,
           email,
