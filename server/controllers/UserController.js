@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { jwtTokens } from "../utils/jwt-helpers.js";
 import { RegisterValidation } from "../utils/joiSchemas.js";
 import { success, error } from "../utils/responseFormat.js";
+import {cloudinary} from "../utils/upload.js";
 
 export default {
   async allUsers(req, res) {
@@ -25,13 +26,22 @@ export default {
   },
 
   async createUser(req, res) {
+    
+     
     try {
         const {error:err, value} = RegisterValidation(req.body);
         
           if (err) {
             return res.status(400).json(error(err.details[0].message, 400 ));
           } else {
+            
       const hashedPassword = await bcrypt.hash(value.password, 10);
+      const imageResult =  await cloudinary.uploader.upload(req.file.path, {
+        public_id: req.file.originalname,
+        width: 500,
+        height: 500,
+        crop: 'limit',
+      });
       const lowerCaseEmail = value.email.toLowerCase()
       const {
         firstname,
@@ -41,33 +51,35 @@ export default {
         occupation,
         expertise,
       } = value;
-      const newUser = await pool.query(
-        "INSERT INTO users ( firstname, lastname, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
-        [
-          firstname,
-          lastname,
-          lowerCaseEmail,
-          hashedPassword,
-          address,
-          bio,
-          occupation,
-          expertise,
-        ]
-      );
+     
+     
+      // const newUser = await pool.query(
+      //   "INSERT INTO users ( firstname, lastname, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *",
+      //   [
+      //     firstname,
+      //     lastname,
+      //     lowerCaseEmail,
+      //     hashedPassword,
+      //     address,
+      //     bio,
+      //     occupation,
+      //     expertise,
+      //   ]
+      // );
 
     
 
-      let tokens = jwtTokens(newUser.rows[0]);
-      res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
-      res
-        .status(201)
-        .json(
-          success(
-            "User Created Successfully",
-            tokens,
-            res.statusCode
-          )
-        );
+      // let tokens = jwtTokens(newUser.rows[0]);
+      // res.cookie("refresh_token", tokens.refreshToken, { httpOnly: true });
+      // res
+      //   .status(201)
+      //   .json(
+      //     success(
+      //       "User Created Successfully",
+      //       tokens,
+      //       res.statusCode
+      //     )
+      //   );
           }
     } catch (e) {
       res.status(500).json(error(e.message, 500 ));

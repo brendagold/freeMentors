@@ -1,4 +1,5 @@
 import express  from 'express';
+import multer from 'multer';
 import UserController from './controllers/UserController.js'
 import LoginController from './controllers/LoginController.js'
 import { authenticateToken } from './middleware/authorization.js';
@@ -6,15 +7,18 @@ import {isAdmin, isMentor, isUser} from './middleware/roleAuth.js';
 import MentorController from './controllers/MentorController.js';
 import SessionController from './controllers/SessionController.js';
 import AdminController from './controllers/AdminController.js';
+import { cloudStorage } from './utils/upload.js';
 
 const routes = express.Router();
+
+const parser = multer({ storage: cloudStorage });
 
 routes.get('/', (req, res) => {
     res.send('Hello from Free Mentors API');
   });
 
 routes.get('/api/users',  UserController.allUsers);
-routes.post('/auth/signup', UserController.createUser);
+routes.post('/auth/signup', parser.single('profile_img'), UserController.createUser);
 routes.get('/users/:userid', UserController.getUserById );
 routes.patch('/users/:userid', authenticateToken, isAdmin, UserController.upgradeUserById )
 
