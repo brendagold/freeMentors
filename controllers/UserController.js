@@ -86,6 +86,7 @@ export default {
         );
           }
     } catch (e) {
+      
       res.status(500).json(error(e.message, 500 ));
     }
   },
