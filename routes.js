@@ -20,6 +20,7 @@ routes.get('/', (req, res) => {
 routes.get('/api/users',  UserController.allUsers);
 routes.post('/auth/signup', parser.single('profile_img'), UserController.createUser);
 routes.get('/users/:userid', UserController.getUserById );
+routes.get('/user/edit/:userid', UserController.editProfile );
 routes.patch('/users/:userid', authenticateToken, isAdmin, UserController.upgradeUserById )
 
 routes.post('/auth/signin', LoginController.login);
