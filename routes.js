@@ -25,7 +25,7 @@ routes.patch('/users/:userid', authenticateToken, isAdmin, UserController.upgrad
 
 routes.post('/auth/signin', LoginController.login);
 
-routes.get('/mentors', authenticateToken, MentorController.allMentors)
+routes.get('/mentors',  MentorController.allMentors)
 routes.get('/mentors/:mentorid', authenticateToken, MentorController.getMentorById)
 
 

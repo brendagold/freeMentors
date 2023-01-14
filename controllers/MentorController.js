@@ -7,7 +7,7 @@ import { success, error } from "../utils/responseFormat.js";
 export default {
     async allMentors(req,res) {
         try {
-           const mentors = await pool.query('SELECT mentorid, firstName, lastName, email,address,bio,occupation,expertise, role FROM mentors');
+           const mentors = await pool.query('SELECT mentorid,profile_img, firstName, lastName, email,address,bio,occupation,expertise, role FROM mentors');
            res.status(200).json(success("All Mentors", mentors.rows, res.statusCode))
 
         } catch (err) {
@@ -18,7 +18,7 @@ export default {
     async createMentor(req, res) {
         try {
            const hashedPassword = await bcrypt.hash(req.body.password, 10);
-           const newMentor = await pool.query("INSERT INTO mentors ( firstName, lastName, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8) RETURNING *", [req.body.firstName, req.body.lastName, req.body.email, hashedPassword, req.body.address, req.body.bio, req.body.occupation, req.body.expertise]) 
+           const newMentor = await pool.query("INSERT INTO mentors (profile_img, firstName, lastName, email,password,address,bio,occupation,expertise) VALUES ($1, $2,$3,$4,$5,$6,$7,$8, $9) RETURNING *", [req.body.firstName, req.body.lastName, req.body.email, hashedPassword, req.body.address, req.body.bio, req.body.occupation, req.body.expertise]) 
            res.status(200).json(success("Mentor Created Successfully", newMentor.rows[0], res.statusCode))
         } catch (err) {
             res.status(500).json(error(err.message, res.statusCode))

@@ -18,6 +18,7 @@ CREATE TABLE users (
 
 CREATE TABLE mentors (
     mentorId uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    profile_img TEXT NOT NULL,
     firstname TEXT NOT NULL,
     lastname TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
@@ -115,6 +116,31 @@ VALUES
         'crypto expert, get in touch today',
         'crypto Expert',
         'Intermediate'
+    );
+
+INSERT INTO
+    mentors (
+        profile_img,
+        firstName,
+        lastName,
+        email,
+        password,
+        address,
+        bio,
+        occupation,
+        expertise
+    )
+VALUES
+(
+    'http://res.cloudinary.com/dtn9c7vkv/image/upload/v1650999225/bismid.PNG.png',
+        'Seraf',
+        'Grestin',
+        'seraf@yahoo.com',
+        'Seraf919',
+        '54 clemmy street',
+        'Web developer extraordinary, get in touch today',
+        'Software Engineer',
+        'Expert'
     );
 
 INSERT INTO sessions (
